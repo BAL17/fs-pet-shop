@@ -3,18 +3,16 @@ let command = process.argv[2]
 let args = process.argv
 const path = require('path')
 let petPath = path.join(__dirname, 'pets.json')
-// const { error } = require("console");
 
-//******** READ AND CREATE FUNCTIONALITY ******************/
-const fs = require("fs");
 
 //******************* SERVER **************/
 const http = require("http");
 const PORT =  8001;
 
+
 let server = http.createServer( (req, res) => {
-    if (req.method === 'GET' && req.url === '/pets') {
-        fs.readFile(petPath, 'utf-8', (error, petsJSON) => {
+    fs.readFile(petPath, 'utf-8', (error, petsJSON) => {
+        if (req.method === 'GET' && req.url === '/pets') {
             if (error) {
                 console.error(error.message)
                 res.statusCode = 500;
@@ -24,12 +22,15 @@ let server = http.createServer( (req, res) => {
                 res.setHeader('Content-Type', 'application/json');
                 res.end(petsJSON)
             }
-        })
-    } else {
+        } else {
        res.statusCode = 404;
        res.setHeader('Content-Type', 'text/plain');
        res.end('Not found');
-    }
+        }
+    })
+
+
+
 });
 
 
@@ -38,6 +39,10 @@ server.listen(PORT, function() {
 });
 
 //******************* SERVER **************/
+
+
+//******** READ AND CREATE FUNCTIONALITY ******************/
+const fs = require("fs");
 
 //create FN
 const create = () => {
@@ -59,8 +64,7 @@ const create = () => {
                 }
                 parsedData.push(newPet)
             
-            // FYI, optional syntax usage for fs.writeFile():
-            // fs.writeFile('./pets.json', JSON.stringify(fileResult), function(error)
+
         fs.writeFile('./pets.json', JSON.stringify(parsedData), function (error){
         if (error){
                 console.error(error.message);
